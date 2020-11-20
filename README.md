@@ -2,7 +2,7 @@
 This project was made by me, following a Udemy course on React.js (https://www.udemy.com/course/javascript-the-complete-guide-2020-beginner-advanced/). It was deployed on firebase and bootstrapped with [Create React App].You can view it on:
 #### https://burgur-bildur.web.app/
 
-Feel free to fork this repository and follow instructions bellow.
+Feel free to fork or clone this repository and follow instructions bellow.
 
 ### Available Scripts
 
