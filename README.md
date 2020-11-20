@@ -2,6 +2,8 @@
 This project was made by me, following a Udemy course on React.js (https://www.udemy.com/course/javascript-the-complete-guide-2020-beginner-advanced/). It was deployed on firebase and bootstrapped with [Create React App].You can view it on:
 #### https://burgur-bildur.web.app/
 
+It's partially class based and has Redux, but part of it is on hooks. I am planning to make a repository for a hooks version without Redux and a repository for a version with classes and Redux, so you could see I can use both.
+
 Feel free to fork or clone this repository and follow instructions bellow.
 
 ### Available Scripts
