@@ -1,5 +1,5 @@
 # Welcome
-This project was made by my, following a Udemy course. It was deployed on firebase and bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was made by me, following a Udemy course. It was deployed on firebase and bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 You can view it on:
 ### https://burgur-bildur.web.app/
 
