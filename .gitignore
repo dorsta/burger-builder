@@ -15,8 +15,6 @@
 /.firebase
 .firebaserc
 firebase.json
-package.json
-package-lock.json
 
 # misc
 .DS_Store
