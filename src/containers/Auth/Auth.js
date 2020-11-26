@@ -9,8 +9,7 @@ import * as actions from "../../store/actions/index";
 import Spinner from "../../components/UI/Spinner/Spinner";
 
 const Auth = (props) => {
-  const [state, setState] = useState({
-    controls: {
+  const [controls, setControls] = useState({
       email: {
         elementType: "input",
         elementConfig: {
@@ -38,10 +37,9 @@ const Auth = (props) => {
         },
         valid: false,
         touched: false,
-      },
     },
-    isSignup: false,
   });
+  const [isSignup, setIsSignup] = useState(false)
 
   const checkValidityHandler = (value, rules) => {
     let isValid = true;
@@ -69,40 +67,40 @@ const Auth = (props) => {
 
   const changeHandler = (event, controlName) => {
     const updatedControls = {
-      ...state.controls,
+      ...controls,
       [controlName]: {
-        ...state.controls[controlName],
+        ...controls[controlName],
         value: event.target.value,
         valid: checkValidityHandler(
           event.target.value,
-          state.controls[controlName].validation
+          controls[controlName].validation
         ),
         touched: true,
       },
     };
-    setState((prevState => ({ ...prevState, controls: updatedControls })));
+    setControls(updatedControls);
   };
 
   const submitHandler = (event) => {
     event.preventDefault();
     props.onAuth(
-      state.controls.email.value,
-      state.controls.pasword.value,
-      state.isSignup
+      controls.email.value,
+      controls.pasword.value,
+      isSignup
     );
   };
 
   const switchAuthModeHandler = () => {
-    setState((prevState) => {
-      return ({ ...prevState, isSignup: !prevState.isSignup });
+    setIsSignup((prevState) => {
+      return !prevState;
     });
   };
 
   const formElementsArray = [];
-  for (let key in state.controls) {
+  for (let key in controls) {
     formElementsArray.push({
       id: key,
-      config: state.controls[key],
+      config: controls[key],
     });
   }
 
@@ -149,16 +147,16 @@ const Auth = (props) => {
         {form}
         {authRedirect}
         <Button btnType="Success">
-          {state.isSignup ? "SIGN-UP" : "SIGN-IN"}
+          {isSignup ? "SIGN-UP" : "SIGN-IN"}
         </Button>
       </form>
       <p style={{ marginBottom: "10px" }}>
-        {!state.isSignup
+        {!isSignup
           ? "Don't have an account?"
           : "Already have an account?"}
       </p>
       <Button btnType="Danger" special clicked={switchAuthModeHandler}>
-        SWITCH TO {state.isSignup ? "SIGN-IN" : "SIGN-UP"}
+        SWITCH TO {isSignup ? "SIGN-IN" : "SIGN-UP"}
       </Button>
     </div>
   );
