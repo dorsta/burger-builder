@@ -38,19 +38,34 @@ export const checkAuthTimeout = (expirationTime) => {
     }, expirationTime * 1000);
 };
 
-export const auth = (email, password, isSignup) => {
+export const auth = (email, password, method) => {
   return (dispatch) => {
     dispatch(authStart());
-    const authData = {
+    let authData = {
       email: email,
       password: password,
       returnSecureToken: true,
     };
-    let url =
-      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA5rolwQX1ahDykRJz3F4rtabLPV6lsHTE";
-    if (!isSignup) {
-      url =
+    let url = ""
+    switch (method) {
+      case "SIGN-IN":
+        url =
         "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA5rolwQX1ahDykRJz3F4rtabLPV6lsHTE";
+        break
+      case "SIGN-UP":
+        url =
+      "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA5rolwQX1ahDykRJz3F4rtabLPV6lsHTE";
+      break
+      case "GUEST":
+        url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA5rolwQX1ahDykRJz3F4rtabLPV6lsHTE";
+        authData = {
+          returnSecureToken: true
+        }
+      break
+      default:
+
+        return;
     }
     axios
       .post(url, authData)

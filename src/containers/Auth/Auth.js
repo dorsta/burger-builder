@@ -10,55 +10,64 @@ import Spinner from "../../components/UI/Spinner/Spinner";
 
 const Auth = (props) => {
   const [controls, setControls] = useState({
-      email: {
-        elementType: "input",
-        elementConfig: {
-          type: "email",
-          placeholder: "Your Email",
-        },
-        value: "",
-        validation: {
-          required: true,
-          isEmail: true,
-        },
-        valid: false,
-        touched: false,
+    email: {
+      elementType: "input",
+      elementConfig: {
+        type: "email",
+        placeholder: "Your Email",
       },
-      pasword: {
-        elementType: "input",
-        elementConfig: {
-          type: "password",
-          placeholder: "Password",
-        },
-        value: "",
-        validation: {
-          required: true,
-          minLength: 6,
-        },
-        valid: false,
-        touched: false,
+      value: "",
+      validation: {
+        required: true,
+        isEmail: true,
+      },
+      valid: false,
+      touched: false,
+    },
+    pasword: {
+      elementType: "input",
+      elementConfig: {
+        type: "password",
+        placeholder: "Password",
+      },
+      value: "",
+      validation: {
+        required: true,
+        minLength: 6,
+      },
+      valid: false,
+      touched: false,
     },
   });
-  const [isSignup, setIsSignup] = useState(false)
+  const [isSignup, setIsSignup] = useState(false);
+  const [signupIsValid, setSignupIsValid] = useState(false);
 
   const checkValidityHandler = (value, rules) => {
     let isValid = true;
 
-    if (isValid) {
-      if (rules.required) {
-        isValid = value.trim() !== "";
+    if(isSignup) {
+      if (isValid) {
+        if (rules.required) {
+          isValid = value.trim() !== "";
+        }
       }
-    }
 
-    if (isValid) {
-      if (rules.minLength) {
-        isValid = value.length >= rules.minLength;
+      if (isValid) {
+        if (rules.minLength) {
+          isValid = value.length >= rules.minLength;
+        }
       }
-    }
 
-    if (isValid) {
-      if (rules.maxLength) {
-        isValid = value.length <= rules.maxLength;
+      if (isValid) {
+        if (rules.maxLength) {
+          isValid = value.length <= rules.maxLength;
+        }
+      }
+
+      if (isValid) {
+        if (rules.matchingPassword) {
+          isValid = value === controls.pasword.value;
+        }
       }
     }
 
@@ -78,16 +87,36 @@ const Auth = (props) => {
         touched: true,
       },
     };
+
+    if (isSignup) {
+      let formIsValid = true;
+      for (let elementIdentifier in updatedControls) {
+        formIsValid = updatedControls[elementIdentifier].valid && formIsValid;
+      }
+      setSignupIsValid(formIsValid);
+    }
     setControls(updatedControls);
   };
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onAuth(
-      controls.email.value,
-      controls.pasword.value,
-      isSignup
-    );
+
+    let method = "";
+
+    if (isSignup) {
+      method = "SIGN-UP";
+      if (!signupIsValid) {
+        return;
+      }
+    } else {
+      method = "SIGN-IN";
+    }
+    props.onAuth(controls.email.value, controls.pasword.value, method);
+  };
+
+  const guestSigninHandler = () => {
+    const method = "GUEST";
+    props.onAuth(controls.email.value, controls.pasword.value, method);
   };
 
   const switchAuthModeHandler = () => {
@@ -124,9 +153,7 @@ const Auth = (props) => {
 
   if (props.error) {
     errorMessage = (
-      <p style={{ color: "red" }}>
-        {props.error.message.replace(/_/g, " ")}
-      </p>
+      <p style={{ color: "red" }}>{props.error.message.replace(/_/g, " ")}</p>
     );
   }
 
@@ -146,17 +173,19 @@ const Auth = (props) => {
         {errorMessage}
         {form}
         {authRedirect}
-        <Button btnType="Success">
+        <Button btnType="Success" disabled={isSignup ? !signupIsValid : false}>
           {isSignup ? "SIGN-UP" : "SIGN-IN"}
         </Button>
       </form>
-      <p style={{ marginBottom: "10px" }}>
-        {!isSignup
-          ? "Don't have an account?"
-          : "Already have an account?"}
+      <p className={classes.SigningText}>
+        {!isSignup ? "Don't have an account?" : "Already have an account?"}
       </p>
       <Button btnType="Danger" special clicked={switchAuthModeHandler}>
         SWITCH TO {isSignup ? "SIGN-IN" : "SIGN-UP"}
+      </Button>
+      <p className={classes.SigningText}>Or</p>
+      <Button btnType="Danger" special clicked={guestSigninHandler}>
+        SIGN-IN AS A GUEST
       </Button>
     </div>
   );
@@ -172,8 +201,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onAuth: (email, password, isSignup) =>
-      dispatch(actions.auth(email, password, isSignup)),
+    onAuth: (email, password, method) =>
+      dispatch(actions.auth(email, password, method)),
   };
 };
 

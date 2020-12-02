@@ -18,6 +18,11 @@
     display: block;
 }
 
+.SigningText {
+    margin: 0;
+    font-size: 0.9em;
+}
+
 @media (min-width: 500px) {
     .NotInModal {
         width: 400px;
